@@ -1,0 +1,12 @@
+services:
+  guardrails-presidio:
+    build:
+      context: .
+      args:
+        UPSTREAM_REF: bbd6f27467a53ff3869b59449edf4209f85ae675
+    ports:
+      - "5002:5002"
+    environment:
+      LISTEN_ADDR: ":5002"
+      KEYWORD_PREFILTER: "true"
+      INCLUDE_DEFAULT_OFF: "false"

@@ -1,0 +1,10 @@
+guardrails-presidio-litellm
+Copyright 2026 AlaiyaNetwork
+
+This product is based on and incorporates components from:
+  cloud-ru-tech/guardrails-llm-filter
+  https://github.com/cloud-ru-tech/guardrails-llm-filter
+
+The upstream project is licensed under the Apache License 2.0.
+The derived Docker build pins and compiles the original scanner, registry,
+validators, and rule sets from the upstream source tree.
