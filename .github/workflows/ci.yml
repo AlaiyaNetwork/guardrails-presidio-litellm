@@ -40,7 +40,7 @@ jobs:
 
       - name: Start adapter
         run: |
-          docker run -d --rm \
+          docker run -d \
             --name guardrails-presidio \
             -p 5002:5002 \
             guardrails-presidio-litellm:ci
@@ -51,9 +51,15 @@ jobs:
             if curl -fsS http://127.0.0.1:5002/healthz >/dev/null; then
               exit 0
             fi
+            if ! docker inspect -f '{{.State.Running}}' guardrails-presidio 2>/dev/null | grep -q true; then
+              echo 'adapter exited before becoming healthy'
+              docker logs guardrails-presidio || true
+              exit 1
+            fi
             sleep 1
           done
-          docker logs guardrails-presidio
+          echo 'adapter did not become healthy in time'
+          docker logs guardrails-presidio || true
           exit 1
 
       - name: Smoke test Presidio API
@@ -62,6 +68,10 @@ jobs:
       - name: Container logs on failure
         if: failure()
         run: docker logs guardrails-presidio || true
+
+      - name: Remove test container
+        if: always()
+        run: docker rm -f guardrails-presidio || true
 
   publish:
     if: github.event_name != 'pull_request'
