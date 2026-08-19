@@ -6,9 +6,9 @@ intended as a drop-in PII backend for LiteLLM.
 
 > **Upstream attribution:** this project is explicitly based on
 > [`cloud-ru-tech/guardrails-llm-filter`](https://github.com/cloud-ru-tech/guardrails-llm-filter).
-> The Docker build pins and compiles the original Cloud.ru rule loader, registry,
-> regex scanner, validators, and bundled rule sets. The upstream project is
-> Apache-2.0 licensed; its `LICENSE` and `NOTICE` are preserved in the image.
+> The project pins the original Cloud.ru rule loader, registry, regex scanner,
+> validators, and bundled rule sets. The upstream project is Apache-2.0 licensed;
+> its `LICENSE` and `NOTICE` are preserved in the image.
 
 The goal is to keep the existing external topology unchanged:
 
@@ -51,11 +51,15 @@ The engine is deterministic, so accepted regex+validator matches are reported wi
 
 ## Build
 
-The build is intentionally pinned to upstream revision:
+The engine dependency and bundled rules are intentionally pinned to upstream revision:
 
 ```text
 bbd6f27467a53ff3869b59449edf4209f85ae675
 ```
+
+The adapter builds as its own Go module. `go.mod` pins the Cloud.ru engine as a
+module dependency, while the Docker build checks out the same upstream commit to
+copy its rule YAML files plus `LICENSE` and `NOTICE` into the runtime image.
 
 ```bash
 docker build --build-arg UPSTREAM_REF=bbd6f27467a53ff3869b59449edf4209f85ae675 -t guardrails-presidio-litellm .
@@ -122,7 +126,10 @@ Specific Cloud.ru secret and Russian PII types are intentionally preserved as st
 
 ## Architecture
 
-The adapter deliberately does **not** proxy LLM traffic. The Docker build overlays `cmd/presidio-adapter` into the pinned upstream Go module, so scanner behavior, overlap resolution, validators, and rule compilation come from the original project rather than a rewritten copy.
+The adapter deliberately does **not** proxy LLM traffic. It imports the original
+Cloud.ru public engine packages as a pinned Go module dependency. Scanner behavior,
+overlap resolution, validators, and rule compilation therefore come from the
+upstream project rather than a rewritten copy.
 
 ## License and provenance
 
