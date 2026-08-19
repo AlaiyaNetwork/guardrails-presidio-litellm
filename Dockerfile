@@ -18,7 +18,7 @@ COPY go.mod ./
 COPY cmd/presidio-adapter/ ./cmd/presidio-adapter/
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    go mod download \
+    go mod tidy \
  && CGO_ENABLED=0 go build -trimpath -ldflags='-s -w' -o /out/presidio-adapter ./cmd/presidio-adapter
 
 FROM gcr.io/distroless/static-debian12:nonroot
