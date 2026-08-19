@@ -30,7 +30,8 @@ COPY --from=upstream /upstream/LICENSE /app/UPSTREAM-LICENSE
 COPY --from=upstream /upstream/NOTICE /app/UPSTREAM-NOTICE
 ENV LISTEN_ADDR=:5002 \
     RULE_FILES=/app/configs/guardrails_regex_rules.yaml,/app/configs/guardrails_regex_rules.gitleaks.generated.yaml \
-    KEYWORD_PREFILTER=true
+    KEYWORD_PREFILTER=true \
+    INCLUDE_DEFAULT_OFF=true
 EXPOSE 5002
 USER nonroot:nonroot
 ENTRYPOINT ["/app/presidio-adapter"]
