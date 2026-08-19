@@ -9,4 +9,4 @@ services:
     environment:
       LISTEN_ADDR: ":5002"
       KEYWORD_PREFILTER: "true"
-      INCLUDE_DEFAULT_OFF: "false"
+      INCLUDE_DEFAULT_OFF: "true"
